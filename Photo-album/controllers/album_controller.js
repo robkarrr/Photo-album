@@ -1,30 +1,23 @@
-/**
- * Example Controller
- */
+
 
  const debug = require('debug')('books:example_controller');
  const { matchedData, validationResult } = require('express-validator');
  const models = require('../models');
- 
- /**
-  * Get all resources
-  *
-  * GET /
-  */
+
+
  const index = async (req, res) => {
-     const all_albums = await models.Album.fetchAll();
+     const albums = await models.Album.fetchAll();
  
      res.send({
          status: 'success',
-         data: all_albums,
+         data: {
+             albums: albums
+         }
      });
  }
  
- /**
-  * Get a specific resource
-  *
-  * GET /:exampleId
-  */
+ 
+
  const show = async (req, res) => {
      const album = await new models.Album({ id: req.params.albumId })
          .fetch();
@@ -35,19 +28,16 @@
      });
  }
  
- /**
-  * Store a new resource
-  *
-  * POST /
-  */
- const storeAlbum = async (req, res) => {
-     // check for any validation errors
+ 
+ 
+const storeAlbum = async (req, res) => {
+
      const errors = validationResult(req);
      if (!errors.isEmpty()) {
          return res.status(422).send({ status: 'fail', data: errors.array() });
      }
  
-     // get only the validated data from the request
+
      const validData = matchedData(req);
  
      try {
@@ -67,16 +57,28 @@
          throw error;
      }
  }
+
+/* STORE A PHOTO IN AN ALBUM */
+
+const storePhoto = async (req, res) => {
+    const errors = validationResult(req);
+     if (!errors.isEmpty()) {
+         return res.status(422).send({ status: 'fail', data: errors.array() });
+     }
+
+
+}
+
+
  
- /**
-  * Update a specific resource
-  *
-  * PUT /:exampleId
-  */
+    /*
+        UPDATE AND ALBUM    
+    */
+
  const updateAlbum = async (req, res) => {
      const albumId = req.params.albumId;
  
-     // make sure example exists
+
      const album = await new models.Album({ id: albumId }).fetch({ require: false });
      if (!example) {
          debug("Album to update was not found. %o", { id: albumId });
@@ -87,13 +89,13 @@
          return;
      }
  
-     // check for any validation errors
+
      const errors = validationResult(req);
      if (!errors.isEmpty()) {
          return res.status(422).send({ status: 'fail', data: errors.array() });
      }
  
-     // get only the validated data from the request
+
      const validData = matchedData(req);
  
      try {
@@ -112,18 +114,6 @@
          });
          throw error;
      }
- }
- 
- /**
-  * Destroy a specific resource
-  *
-  * DELETE /:exampleId
-  */
- const destroy = (req, res) => {
-     res.status(400).send({
-         status: 'fail',
-         message: 'You need to write the code for deleting this resource yourself.',
-     });
  }
  
  module.exports = {
