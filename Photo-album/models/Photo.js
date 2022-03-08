@@ -1,11 +1,13 @@
-module.exports = (bookshelf) => {
+
+ module.exports = (bookshelf) => {
 	return bookshelf.model('Photo', {
 		tableName: 'photos',
-		users() {
-			return this.belongsTo('User');
+		album() {
+			return this.belongsTo('Album');   
+
 		},
-		photos(){
-			return this.belongsToMany('AlbumPhotos');
+		users() {
+			return this.belongsToMany('User');
 		}
 	});
-};
+}
